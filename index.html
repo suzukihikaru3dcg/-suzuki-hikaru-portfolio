@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SUZUKI HIKARU — 3DCG Artist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300&family=Space+Mono&family=Noto+Sans+JP:wght@200;300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07070b;--bg2:#0b0b10;--text:#ddd7c8;--dim:#48443c;
+  --amber:#b07a30;--serif:'Cormorant Garamond',Georgia,serif;
+  --mono:'Space Mono',monospace;--jp:'Noto Sans JP',sans-serif;
+}
+html{background:var(--bg);overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--jp);font-weight:200;overflow-x:hidden;-webkit-font-smoothing:antialiased;cursor:none}
+a{color:inherit;text-decoration:none}
+img,video{display:block;width:100%;height:100%;object-fit:cover}
+
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--text);pointer-events:none;z-index:9000;transform:translate(-50%,-50%);mix-blend-mode:difference;transition:width .4s,height .4s}
+#cur.big{width:56px;height:56px;background:transparent;border:1px solid rgba(255,255,255,0.35)}
+#cur-ring{position:fixed;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);pointer-events:none;z-index:8999;transform:translate(-50%,-50%)}
+#grain{position:fixed;inset:0;pointer-events:none;z-index:8998;mix-blend-mode:screen;image-rendering:pixelated}
+
+#loader{position:fixed;inset:0;background:#000;z-index:8996;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.ld-num{font-family:var(--mono);font-size:clamp(5rem,15vw,11rem);letter-spacing:-0.05em;color:#fff;line-height:1}
+.ld-bar{position:absolute;bottom:0;left:0;right:0;height:1px;background:#111}
+.ld-fill{height:100%;background:#fff;width:0}
+.ld-name{position:absolute;bottom:3rem;left:3rem;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.35em;color:#333}
+
+#nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:flex-start;padding:2.2rem 3rem;opacity:0;mix-blend-mode:difference}
+.nav-brand{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.2em;color:#fff}
+.nav-brand small{display:block;letter-spacing:0.15em;opacity:0.4;font-size:0.55rem;margin-top:0.2rem}
+.nav-r{display:flex;gap:2.5rem}
+.nav-r a{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.15em;color:#fff;opacity:0.4;transition:opacity .3s}
+.nav-r a:hover{opacity:1}
+
+/* HERO */
+#hero{height:100vh;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:0 3rem 3.5rem;overflow:hidden}
+.hero-vbg{position:absolute;inset:0;z-index:0;overflow:hidden}
+.hero-vbg video{width:100%;height:100%;object-fit:cover;opacity:0.38}
+.hero-vbg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(7,7,11,0.4) 50%,rgba(7,7,11,0.15) 100%)}
+.hero-inner{position:relative;z-index:2}
+.hero-tag{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.35em;color:var(--dim);margin-bottom:1.8rem;overflow:hidden}
+.hero-tag span{display:block;transform:translateY(100%)}
+.hero-h1{font-family:var(--serif);font-weight:200;font-size:clamp(4.5rem,13vw,13rem);line-height:0.84;letter-spacing:-0.025em;color:var(--text);margin-bottom:2.5rem}
+.hero-line{overflow:hidden;display:block}
+.hero-word{display:block;transform:translateY(110%)}
+.hero-word.it{font-style:italic;color:rgba(220,210,190,0.65)}
+.hero-foot{display:flex;align-items:flex-end;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.06);padding-top:1.5rem}
+.hero-sub{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;color:var(--dim);line-height:2.2;opacity:0}
+.hero-scroll{font-family:var(--mono);font-size:0.52rem;letter-spacing:0.35em;color:var(--dim);writing-mode:vertical-rl;opacity:0;animation:sd 3s ease-in-out infinite}
+@keyframes sd{0%,100%{opacity:0.3;transform:translateY(0)}50%{opacity:0.7;transform:translateY(10px)}}
+
+/* STATEMENT */
+#statement{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:8rem 3rem;background:var(--bg)}
+.stmt-wrap{text-align:center;max-width:860px}
+.stmt-line{display:block;width:40px;height:1px;background:var(--amber);margin:0 auto 3rem;opacity:0;transform:scaleX(0);transform-origin:left}
+.stmt-en{font-family:var(--serif);font-weight:200;font-size:clamp(2.6rem,6.5vw,6.5rem);line-height:1.06;letter-spacing:-0.025em;color:var(--text)}
+.stmt-em{font-style:italic;display:block;color:rgba(210,200,180,0.6)}
+.stmt-w{display:inline-block;opacity:0;transform:translateY(28px)}
+.stmt-jp{font-family:var(--jp);font-size:0.72rem;font-weight:200;letter-spacing:0.35em;color:var(--dim);margin-top:3.5rem;opacity:0;line-height:2.8}
+
+/* GALLERY */
+#works{background:var(--bg)}
+.works-hd{display:flex;justify-content:space-between;align-items:baseline;padding:5rem 3rem 2.5rem}
+.works-title{font-family:var(--serif);font-weight:200;font-size:clamp(2rem,4vw,3.5rem);letter-spacing:-0.02em;color:var(--text);margin-top:0.6rem}
+.works-count{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.2em;color:var(--dim)}
+.sec-tag{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.4em;color:var(--dim)}
+.gallery-outer{overflow:hidden;padding-bottom:5rem}
+.gallery-track{display:flex;gap:2rem;padding:1rem 3rem;width:max-content;will-change:transform}
+
+.gitem{flex:none;width:clamp(220px,26vw,360px);cursor:none}
+.gitem-img{width:100%;aspect-ratio:2/3;overflow:hidden;position:relative;background:var(--bg2)}
+.gitem-img img,.gitem-img video{position:absolute;inset:0;transition:transform .9s cubic-bezier(.25,.46,.45,.94)}
+.gitem:hover .gitem-img img,.gitem:hover .gitem-img video{transform:scale(1.05)}
+.gitem-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(7,7,11,0.92) 0%,transparent 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:1.4rem;opacity:0;transition:opacity .4s}
+.gitem:hover .gitem-overlay{opacity:1}
+.gitem-n{font-family:var(--mono);font-size:0.5rem;letter-spacing:0.2em;color:var(--amber);margin-bottom:0.3rem}
+.gitem-t{font-family:var(--serif);font-size:1.1rem;font-weight:300;color:var(--text)}
+.gitem-c{font-family:var(--mono);font-size:0.5rem;letter-spacing:0.12em;color:var(--dim);margin-top:0.2rem}
+.gitem-meta{padding:.8rem 0 0}
+.gitem-mt{font-family:var(--serif);font-size:1rem;font-weight:300;color:rgba(200,195,185,0.5)}
+.gitem-mc{font-family:var(--mono);font-size:0.5rem;letter-spacing:0.12em;color:var(--dim);margin-top:0.2rem}
+
+/* FEATURED */
+#featured{background:var(--bg);padding-bottom:7rem}
+.feat-img-wrap{height:85vh;overflow:hidden;position:relative}
+.feat-img{width:100%;height:130%;position:absolute;top:-15%;will-change:transform}
+.feat-img img{width:100%;height:100%;object-fit:cover}
+.feat-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(7,7,11,0.1) 0%,var(--bg) 100%)}
+.feat-body{padding:4rem 3rem 0;display:flex;align-items:flex-end;justify-content:space-between;gap:4rem}
+.feat-h{font-family:var(--serif);font-weight:200;font-size:clamp(3rem,7.5vw,7rem);letter-spacing:-0.03em;line-height:0.88;color:var(--text);overflow:hidden}
+.feat-h-inner{display:block;transform:translateY(110%)}
+.feat-jp{font-family:var(--jp);font-size:0.68rem;font-weight:200;letter-spacing:0.35em;color:var(--amber);margin-top:1.2rem;opacity:0}
+.feat-r{max-width:360px;flex-shrink:0}
+.feat-desc{font-family:var(--mono);font-size:0.6rem;line-height:2.3;color:var(--dim);letter-spacing:0.05em;opacity:0}
+
+/* PROCESS */
+#process{padding:8rem 3rem;background:var(--bg2);border-top:1px solid rgba(255,255,255,0.04)}
+.proc-hd{margin-bottom:5rem}
+.proc-title{font-family:var(--serif);font-weight:200;font-size:clamp(2rem,5vw,4.5rem);letter-spacing:-0.02em;color:var(--text);margin-top:0.8rem}
+.proc-title em{font-style:italic}
+
+/* Before/After comparison */
+.proc-compare{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:5rem;opacity:0;transform:translateY(30px)}
+.proc-compare-img{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--bg)}
+.proc-compare-img img{width:100%;height:100%;object-fit:cover}
+.proc-compare-label{position:absolute;bottom:1rem;left:1rem;font-family:var(--mono);font-size:0.5rem;letter-spacing:0.25em;color:rgba(200,195,185,0.6)}
+
+.proc-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(255,255,255,0.05)}
+.proc-item{padding:2.5rem 2rem 2.5rem 0;border-right:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);opacity:0;transform:translateY(24px)}
+.proc-item:nth-child(3n){border-right:none}
+.proc-num{font-family:var(--mono);font-size:0.52rem;letter-spacing:0.25em;color:var(--amber);margin-bottom:2rem}
+.proc-name{font-family:var(--serif);font-size:1.7rem;font-weight:300;color:var(--text);letter-spacing:-0.01em;margin-bottom:1rem}
+.proc-text{font-family:var(--mono);font-size:0.58rem;line-height:2.2;color:var(--dim);letter-spacing:0.03em}
+
+/* ABOUT */
+#about{padding:8rem 3rem;background:var(--bg);display:grid;grid-template-columns:5fr 4fr;gap:6rem;align-items:center;border-top:1px solid rgba(255,255,255,0.04)}
+.about-name{font-family:var(--serif);font-weight:200;font-size:clamp(3rem,9vw,8.5rem);line-height:0.85;letter-spacing:-0.03em;color:var(--text);overflow:hidden}
+.about-name .ln{display:block;overflow:hidden}
+.about-name .lni{display:block;transform:translateY(110%)}
+.about-name em{font-style:italic;color:rgba(200,190,170,0.5)}
+.about-role{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.3em;color:var(--amber);margin-top:2rem;opacity:0}
+.about-r{opacity:0;transform:translateX(20px)}
+.about-jp{font-family:var(--jp);font-size:0.8rem;font-weight:200;line-height:2.8;color:rgba(200,195,185,0.55);letter-spacing:0.05em;margin-bottom:2rem}
+.about-en{font-family:var(--mono);font-size:0.6rem;line-height:2.3;color:var(--dim);letter-spacing:0.06em}
+.about-divider{width:32px;height:1px;background:var(--amber);margin:2rem 0;opacity:0.5}
+
+/* CONTACT */
+#contact{padding:9rem 3rem 7rem;background:var(--bg2);border-top:1px solid rgba(255,255,255,0.04);text-align:center;overflow:hidden}
+.contact-pre{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.45em;color:var(--dim);margin-bottom:2.5rem}
+.contact-title{font-family:var(--serif);font-weight:200;font-size:clamp(3.5rem,10vw,9rem);letter-spacing:-0.03em;line-height:0.88;color:var(--text);margin-bottom:1rem;overflow:hidden}
+.contact-title-inner{display:block;transform:translateY(110%)}
+.contact-title em{font-style:italic;color:var(--amber)}
+.contact-sub{font-family:var(--jp);font-size:0.7rem;font-weight:200;letter-spacing:0.35em;color:var(--dim);margin-bottom:5rem;opacity:0}
+.contact-links{display:flex;justify-content:center;gap:4rem;flex-wrap:wrap;margin-bottom:5rem}
+.contact-link{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.2em;color:var(--dim);border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.4rem;transition:color .3s,border-color .3s;opacity:0}
+.contact-link:hover{color:var(--text);border-color:rgba(255,255,255,0.3)}
+
+footer{padding:1.8rem 3rem;background:var(--bg2);border-top:1px solid rgba(255,255,255,0.04);display:flex;justify-content:space-between}
+footer span{font-family:var(--mono);font-size:0.52rem;letter-spacing:0.12em;color:var(--dim);opacity:0.5}
+
+@media(max-width:900px){
+  #nav{padding:1.5rem}
+  #hero{padding:0 1.5rem 3rem}
+  .works-hd{padding:4rem 1.5rem 2rem}
+  .gallery-track{padding:1rem 1.5rem;gap:1.2rem}
+  .gitem{width:clamp(200px,70vw,300px)}
+  .feat-body{flex-direction:column;padding:3rem 1.5rem 0;gap:2rem}
+  .feat-r{max-width:100%}
+  #process{padding:5rem 1.5rem}
+  .proc-compare{grid-template-columns:1fr}
+  .proc-grid{grid-template-columns:1fr}
+  .proc-item{border-right:none;padding-right:0}
+  #about{grid-template-columns:1fr;padding:5rem 1.5rem;gap:3rem}
+  #contact{padding:6rem 1.5rem 4rem}
+  .contact-links{gap:2rem}
+  footer{padding:1.5rem;flex-direction:column;gap:.5rem}
+}
+</style>
+</head>
+<body>
+
+<canvas id="grain"></canvas>
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<div id="loader">
+  <div class="ld-num" id="ld-n">000</div>
+  <div class="ld-bar"><div class="ld-fill" id="ld-f"></div></div>
+  <div class="ld-name">SUZUKI HIKARU — 3DCG ARTIST</div>
+</div>
+
+<nav id="nav">
+  <div class="nav-brand">SUZUKI HIKARU<small>3DCG ARTIST</small></div>
+  <div class="nav-r">
+    <a href="#works">Works</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-vbg">
+    <video autoplay muted loop playsinline>
+      <source src="./video/hero.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-tag"><span>3DCG ARTIST — CINEMATIC PORTRAITS — VISUAL FILMS</span></div>
+    <h1 class="hero-h1">
+      <span class="hero-line"><span class="hero-word">SUZUKI</span></span>
+      <span class="hero-line"><span class="hero-word it">Hikaru</span></span>
+    </h1>
+    <div class="hero-foot">
+      <div class="hero-sub">3DCG Artist / Blender Creator<br>Cinematic Portraits &amp; Visual Films</div>
+      <div class="hero-scroll">SCROLL ↓</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATEMENT ── -->
+<section id="statement">
+  <div class="stmt-wrap">
+    <span class="stmt-line"></span>
+    <p class="stmt-en">
+      <span class="stmt-w">Still</span><span class="stmt-w">&nbsp;images,</span>
+      <span class="stmt-em">
+        <span class="stmt-w">with</span><span class="stmt-w">&nbsp;a</span><span class="stmt-w">&nbsp;pulse.</span>
+      </span>
+    </p>
+    <p class="stmt-jp">静止画に、映像の余韻を。<br>CGに、人の気配を。</p>
+  </div>
+</section>
+
+<!-- ── GALLERY ── -->
+<section id="works">
+  <div class="works-hd">
+    <div><span class="sec-tag">SELECTED WORKS</span><p class="works-title">Works</p></div>
+    <span class="works-count">2023 — 2025</span>
+  </div>
+  <div class="gallery-outer">
+    <div class="gallery-track" id="gtrack">
+
+      <div class="gitem" data-cursor>
+        <div class="gitem-img"><img src="./images/the-last-return.jpg" alt="The Last Return" loading="lazy">
+          <div class="gitem-overlay"><p class="gitem-n">001</p><p class="gitem-t">The Last Return</p><p class="gitem-c">FILM POSTER · 2025</p></div></div>
+        <div class="gitem-meta"><p class="gitem-mt">The Last Return</p><p class="gitem-mc">FILM POSTER</p></div>
+      </div>
+
+      <div class="gitem" data-cursor style="margin-top:5rem">
+        <div class="gitem-img"><img src="./images/floating-city.jpg" alt="Floating City" loading="lazy" style="object-position:center center">
+          <div class="gitem-overlay"><p class="gitem-n">002</p><p class="gitem-t">Floating City</p><p class="gitem-c">WORLDBUILDING · 2024</p></div></div>
+        <div class="gitem-meta"><p class="gitem-mt">Floating City</p><p class="gitem-mc">WORLDBUILDING</p></div>
+      </div>
+
+      <div class="gitem" data-cursor>
+        <div class="gitem-img"><img src="./images/lost.png" alt="LOST" loading="lazy">
+          <div class="gitem-overlay"><p class="gitem-n">003</p><p class="gitem-t">LOST</p><p class="gitem-c">CINEMATIC · NEON · 2024</p></div></div>
+        <div class="gitem-meta"><p class="gitem-mt">LOST</p><p class="gitem-mc">CINEMATIC · NEON</p></div>
+      </div>
+
+      <div class="gitem" data-cursor style="margin-top:3rem">
+        <div class="gitem-img"><img src="./images/utopia-color.jpg" alt="UTOPIA" loading="lazy">
+          <div class="gitem-overlay"><p class="gitem-n">004</p><p class="gitem-t">UTOPIA</p><p class="gitem-c">EXPERIMENTAL · 2024</p></div></div>
+        <div class="gitem-meta"><p class="gitem-mt">UTOPIA</p><p class="gitem-mc">EXPERIMENTAL</p></div>
+      </div>
+
+      <div class="gitem" data-cursor style="margin-top:1.5rem">
+        <div class="gitem-img"><img src="./images/the-obscura.jpg" alt="The Obscura" loading="lazy">
+          <div class="gitem-overlay"><p class="gitem-n">005</p><p class="gitem-t">The Obscura</p><p class="gitem-c">FILM POSTER · 2025</p></div></div>
+        <div class="gitem-meta"><p class="gitem-mt">The Obscura</p><p class="gitem-mc">FILM POSTER</p></div>
+      </div>
+
+      <div class="gitem" data-cursor style="margin-top:4rem">
+        <div class="gitem-img"><img src="./images/aruku.jpg" alt="歩くことも、止まることも" loading="lazy">
+          <div class="gitem-overlay"><p class="gitem-n">006</p><p class="gitem-t">歩くことも、止まることも</p><p class="gitem-c">CINEMATIC · 2025</p></div></div>
+        <div class="gitem-meta"><p class="gitem-mt">歩くことも、止まることも</p><p class="gitem-mc">CINEMATIC</p></div>
+      </div>
+
+      <div class="gitem" data-cursor>
+        <div class="gitem-img"><img src="./images/mysterious.png" alt="Mysterious" loading="lazy">
+          <div class="gitem-overlay"><p class="gitem-n">007</p><p class="gitem-t">Mysterious</p><p class="gitem-c">SCULPTURE · 3DCG · 2023</p></div></div>
+        <div class="gitem-meta"><p class="gitem-mt">Mysterious</p><p class="gitem-mc">SCULPTURE · 3DCG</p></div>
+      </div>
+
+      <div class="gitem" data-cursor style="margin-top:3rem">
+        <div class="gitem-img"><img src="./images/heliopolis-full.jpg" alt="Heliopolis" loading="lazy">
+          <div class="gitem-overlay"><p class="gitem-n">008</p><p class="gitem-t">Heliopolis</p><p class="gitem-c">PRODUCT · 3DCG · 2024</p></div></div>
+        <div class="gitem-meta"><p class="gitem-mt">Heliopolis</p><p class="gitem-mc">PRODUCT CG</p></div>
+      </div>
+
+      <div class="gitem" data-cursor style="margin-top:5rem">
+        <div class="gitem-img"><img src="./images/heliopolis-splash.jpg" alt="Heliopolis Pour" loading="lazy">
+          <div class="gitem-overlay"><p class="gitem-n">009</p><p class="gitem-t">Heliopolis — Pour</p><p class="gitem-c">PRODUCT · DYNAMICS</p></div></div>
+        <div class="gitem-meta"><p class="gitem-mt">Heliopolis — Pour</p><p class="gitem-mc">PRODUCT · DYNAMICS</p></div>
+      </div>
+
+      <div class="gitem" data-cursor style="margin-top:2rem">
+        <div class="gitem-img"><img src="./images/maw-stout.jpg" alt="The Maw Stout" loading="lazy">
+          <div class="gitem-overlay"><p class="gitem-n">010</p><p class="gitem-t">The Maw Stout</p><p class="gitem-c">PACKAGING · 3DCG</p></div></div>
+        <div class="gitem-meta"><p class="gitem-mt">The Maw Stout</p><p class="gitem-mc">PACKAGING</p></div>
+      </div>
+
+      <div class="gitem" data-cursor style="margin-top:4rem">
+        <div class="gitem-img"><img src="./images/maw-stout-two.jpg" alt="Maw Stout Float" loading="lazy">
+          <div class="gitem-overlay"><p class="gitem-n">011</p><p class="gitem-t">The Maw Stout — Float</p><p class="gitem-c">PACKAGING · DYNAMICS</p></div></div>
+        <div class="gitem-meta"><p class="gitem-mt">The Maw Stout — Float</p><p class="gitem-mc">PACKAGING · DYNAMICS</p></div>
+      </div>
+
+      <div class="gitem" data-cursor>
+        <div class="gitem-img"><img src="./images/verdant-pine.jpg" alt="Verdant Pine" loading="lazy">
+          <div class="gitem-overlay"><p class="gitem-n">012</p><p class="gitem-t">Verdant Pine</p><p class="gitem-c">PACKAGING · 3DCG</p></div></div>
+        <div class="gitem-meta"><p class="gitem-mt">Verdant Pine</p><p class="gitem-mc">PACKAGING</p></div>
+      </div>
+
+      <div class="gitem" data-cursor style="margin-top:3rem">
+        <div class="gitem-img"><img src="./images/timberline.jpg" alt="Timberline Brewing" loading="lazy">
+          <div class="gitem-overlay"><p class="gitem-n">013</p><p class="gitem-t">Timberline Brewing</p><p class="gitem-c">PACKAGING · 3DCG</p></div></div>
+        <div class="gitem-meta"><p class="gitem-mt">Timberline Brewing</p><p class="gitem-mc">PACKAGING</p></div>
+      </div>
+
+      <div class="gitem" data-cursor style="margin-top:5rem">
+        <div class="gitem-img"><img src="./images/utopia-mono.jpg" alt="UTOPIA — Mono" loading="lazy">
+          <div class="gitem-overlay"><p class="gitem-n">014</p><p class="gitem-t">UTOPIA — Mono</p><p class="gitem-c">EXPERIMENTAL · 2024</p></div></div>
+        <div class="gitem-meta"><p class="gitem-mt">UTOPIA — Mono</p><p class="gitem-mc">EXPERIMENTAL</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURED ── -->
+<section id="featured">
+  <div class="feat-img-wrap">
+    <div class="feat-img" id="feat-img">
+      <img src="./images/the-last-return.jpg" alt="The Last Return">
+    </div>
+  </div>
+  <div class="feat-body">
+    <div class="feat-l">
+      <h2 class="feat-h"><span class="feat-h-inner">The Last Return</span></h2>
+      <p class="feat-jp">最後の帰還</p>
+    </div>
+    <div class="feat-r">
+      <p class="feat-desc">地球が変わってしまった。それでも、世界に灯りは残っていた。<br><br>A cinematic 3DCG film project. A lone figure stands under a single light in a world transformed — a still image that holds the weight of an entire film.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROCESS ── -->
+<section id="process">
+  <div class="proc-hd">
+    <span class="sec-tag">HOW IT'S MADE</span>
+    <h2 class="proc-title">The<em> Process</em></h2>
+  </div>
+
+  <!-- Real before/after comparison -->
+  <div class="proc-compare" id="proc-compare">
+    <div class="proc-compare-img">
+      <img src="./images/floating-city-wire.jpg" alt="Wireframe">
+      <span class="proc-compare-label">VIEWPORT · WIREFRAME</span>
+    </div>
+    <div class="proc-compare-img">
+      <img src="./images/floating-city.jpg" alt="Final Render">
+      <span class="proc-compare-label">FINAL RENDER</span>
+    </div>
+  </div>
+
+  <div class="proc-grid">
+    <div class="proc-item">
+      <p class="proc-num">01</p><h3 class="proc-name">Concept</h3>
+      <p class="proc-text">Every work begins with a feeling — a quality of light, a silence before something happens. Narrative forms around atmosphere, not plot.</p>
+    </div>
+    <div class="proc-item">
+      <p class="proc-num">02</p><h3 class="proc-name">Modeling</h3>
+      <p class="proc-text">Built in Blender. Form is studied, then distorted just enough to suggest something more than familiar. Or less. The line is intentional.</p>
+    </div>
+    <div class="proc-item">
+      <p class="proc-num">03</p><h3 class="proc-name">Lighting</h3>
+      <p class="proc-text">Lighting is the real subject. A face in near-darkness. A rim of cold blue. The amber of something burning offscreen. Shadow as character.</p>
+    </div>
+    <div class="proc-item">
+      <p class="proc-num">04</p><h3 class="proc-name">Texture</h3>
+      <p class="proc-text">Materials layered until the boundary between CG and photograph becomes uncertain. Skin that has weight. Metal with memory.</p>
+    </div>
+    <div class="proc-item">
+      <p class="proc-num">05</p><h3 class="proc-name">Composition</h3>
+      <p class="proc-text">Framed like film. Wide lenses, compression, shallow depth. The image should feel like a still from something you almost remember watching.</p>
+    </div>
+    <div class="proc-item">
+      <p class="proc-num">06</p><h3 class="proc-name">Post</h3>
+      <p class="proc-text">DaVinci Resolve / After Effects でグレーディング、グレイン、レンズ収差を加える。引き算の美学。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="about-l">
+    <h2 class="about-name">
+      <span class="ln"><span class="lni">Suzuki</span></span>
+      <span class="ln"><span class="lni"><em>Hikaru</em></span></span>
+    </h2>
+    <p class="about-role">3DCG ARTIST · BLENDER · JAPAN</p>
+  </div>
+  <div class="about-r">
+    <p class="about-jp">Blenderを中心に、3DCGによるポートレート、映像、静止画作品を制作。<br>映画のワンシーンのような光、余白、物語性を重視し、<br>現実と非現実の間にある世界を描く。</p>
+    <div class="about-divider"></div>
+    <p class="about-en">A 3DCG artist creating cinematic portraits,<br>visual films, and quiet science-fiction worlds<br>with Blender / DaVinci Resolve / After Effects.<br>Based in Japan.</p>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <p class="contact-pre">GET IN TOUCH</p>
+  <h2 class="contact-title"><span class="contact-title-inner">Let's<em> talk.</em></span></h2>
+  <p class="contact-sub">新しいプロジェクト・コラボレーションのご依頼</p>
+  <div class="contact-links">
+    <a href="https://www.instagram.com/suzuki_hikaru4/" target="_blank" rel="noopener" class="contact-link">INSTAGRAM</a>
+    <a href="#" class="contact-link">X / TWITTER</a>
+    <a href="mailto:contact@suzukihikaru.com" class="contact-link">MAIL</a>
+    <a href="mailto:contact@suzukihikaru.com" class="contact-link">WORKS INQUIRY</a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 SUZUKI HIKARU — ALL RIGHTS RESERVED</span>
+  <span>3DCG ARTIST · JAPAN</span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script>
+(()=>{
+  const c=document.getElementById('grain'),ctx=c.getContext('2d');
+  const S=0.15;let W,H;
+  const resize=()=>{W=c.width=Math.ceil(innerWidth*S);H=c.height=Math.ceil(innerHeight*S)};
+  Object.assign(c.style,{position:'fixed',inset:'0',width:'100%',height:'100%',pointerEvents:'none',zIndex:'8998',opacity:'0.042',mixBlendMode:'screen',imageRendering:'pixelated'});
+  resize();window.addEventListener('resize',resize);
+  const draw=()=>{const img=ctx.createImageData(W,H),d=img.data;for(let i=0;i<d.length;i+=4){const v=(Math.random()*255)|0;d[i]=d[i+1]=d[i+2]=v;d[i+3]=28;}ctx.putImageData(img,0,0)};
+  setInterval(draw,60);draw();
+})();
+
+(()=>{
+  const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+  const tick=()=>{rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick)};tick();
+  document.querySelectorAll('[data-cursor],a,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+    el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+  });
+})();
+
+(()=>{
+  const numEl=document.getElementById('ld-n'),fill=document.getElementById('ld-f'),
+        loader=document.getElementById('loader'),nav=document.getElementById('nav');
+  const dur=2400,start=performance.now(),ease=t=>1-Math.pow(1-t,4);
+  const tick=now=>{
+    const p=Math.min((now-start)/dur,1),e=ease(p);
+    numEl.textContent=String(Math.floor(e*100)).padStart(3,'0');
+    fill.style.width=(e*100)+'%';
+    if(p<1){requestAnimationFrame(tick)}else{
+      setTimeout(()=>{
+        gsap.to(loader,{yPercent:-100,duration:1.3,ease:'power4.inOut',onComplete:()=>{loader.style.display='none';startAll()}});
+        gsap.to(nav,{opacity:1,duration:1,delay:0.8});
+      },300);
+    }
+  };
+  requestAnimationFrame(tick);
+})();
+
+function startAll(){
+  gsap.registerPlugin(ScrollTrigger);
+  const tl=gsap.timeline();
+  tl.to('.hero-word',{y:'0%',duration:1.5,ease:'power4.out',stagger:0.12})
+    .to('.hero-tag span',{y:'0%',opacity:1,duration:1,ease:'power3.out'},0.2)
+    .to('.hero-sub',{opacity:1,duration:1,ease:'power2.out'},0.7)
+    .to('.hero-scroll',{opacity:1,duration:1,ease:'power2.out'},1.1);
+  gsap.to('.hero-h1',{yPercent:-15,opacity:0,ease:'none',
+    scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:true}});
+  gsap.to('.stmt-line',{scaleX:1,opacity:1,duration:1.2,ease:'power3.inOut',
+    scrollTrigger:{trigger:'#statement',start:'top 70%'}});
+  gsap.to('.stmt-w',{opacity:1,y:0,duration:1.1,ease:'power3.out',stagger:0.1,delay:0.3,
+    scrollTrigger:{trigger:'#statement',start:'top 65%'}});
+  gsap.to('.stmt-jp',{opacity:1,duration:1.8,ease:'power2.out',delay:0.6,
+    scrollTrigger:{trigger:'#statement',start:'top 55%'}});
+
+  const track=document.getElementById('gtrack');
+  const getAmt=()=>-(track.scrollWidth-window.innerWidth+96);
+  gsap.to(track,{x:getAmt,ease:'none',
+    scrollTrigger:{trigger:'#works',start:'top top',end:()=>`+=${Math.abs(getAmt())}`,
+      pin:true,scrub:1,anticipatePin:1,invalidateOnRefresh:true}});
+  gsap.from('.gitem',{opacity:0,y:50,duration:1.2,ease:'power3.out',stagger:0.06,
+    scrollTrigger:{trigger:'#works',start:'top 85%'}});
+
+  gsap.to('#feat-img',{y:'-12%',ease:'none',
+    scrollTrigger:{trigger:'#featured',start:'top bottom',end:'bottom top',scrub:true}});
+  gsap.to('.feat-h-inner',{y:'0%',duration:1.4,ease:'power4.out',
+    scrollTrigger:{trigger:'#featured',start:'center 85%'}});
+  gsap.to('.feat-jp',{opacity:1,duration:1.2,ease:'power2.out',delay:0.3,
+    scrollTrigger:{trigger:'#featured',start:'center 85%'}});
+  gsap.to('.feat-desc',{opacity:1,duration:1,ease:'power2.out',delay:0.5,
+    scrollTrigger:{trigger:'#featured',start:'center 80%'}});
+
+  gsap.to('#proc-compare',{opacity:1,y:0,duration:1.2,ease:'power3.out',
+    scrollTrigger:{trigger:'#proc-compare',start:'top 80%'}});
+  document.querySelectorAll('.proc-item').forEach((el,i)=>{
+    gsap.to(el,{opacity:1,y:0,duration:1,ease:'power3.out',delay:(i%3)*0.08,
+      scrollTrigger:{trigger:el,start:'top 88%'}});
+  });
+
+  gsap.to('.lni',{y:'0%',duration:1.4,ease:'power4.out',stagger:0.12,
+    scrollTrigger:{trigger:'#about',start:'top 70%'}});
+  gsap.to('.about-role',{opacity:1,duration:1,ease:'power2.out',delay:0.4,
+    scrollTrigger:{trigger:'#about',start:'top 70%'}});
+  gsap.to('.about-r',{opacity:1,x:0,duration:1.2,ease:'power3.out',delay:0.2,
+    scrollTrigger:{trigger:'#about',start:'top 65%'}});
+
+  gsap.to('.contact-title-inner',{y:'0%',duration:1.3,ease:'power4.out',
+    scrollTrigger:{trigger:'#contact',start:'top 70%'}});
+  gsap.to('.contact-sub',{opacity:1,duration:1.2,ease:'power2.out',delay:0.3,
+    scrollTrigger:{trigger:'#contact',start:'top 70%'}});
+  gsap.to('.contact-link',{opacity:1,duration:0.8,ease:'power2.out',stagger:0.1,delay:0.4,
+    scrollTrigger:{trigger:'#contact',start:'top 65%'}});
+
+  ScrollTrigger.create({start:'top -80',
+    onUpdate:self=>{gsap.to('#nav',{y:self.direction===1&&self.progress>0.02?-80:0,duration:0.5,ease:'power2.out'})}});
+}
+</script>
+</body>
+</html>
