@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SUZUKI HIKARU — 3DCG Artist</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300&family=Space+Mono&family=Noto+Sans+JP:wght@200;300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,200;0,300;1,200;1,300&family=Bodoni+Moda:ital,opsz,wght@0,6..96,200;0,6..96,300;1,6..96,200&family=Space+Mono&family=Noto+Sans+JP:wght@200;300&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -56,7 +56,7 @@ img,video{display:block;width:100%;height:100%;object-fit:cover}
 .hero-inner{position:relative;z-index:2}
 .hero-tag{font-family:var(--mono);font-size:.55rem;letter-spacing:.35em;color:var(--dim);margin-bottom:1.8rem;overflow:hidden}
 .hero-tag span{display:block;transform:translateY(100%)}
-.hero-h1{font-family:var(--serif);font-weight:200;font-size:clamp(4.5rem,13vw,13rem);line-height:.84;letter-spacing:-.025em;color:var(--text);margin-bottom:2.5rem}
+.hero-h1{font-family:var(--display);font-weight:200;font-size:clamp(3.5rem,11vw,11rem);line-height:.88;letter-spacing:.06em;color:var(--text);margin-bottom:2.5rem;text-transform:uppercase}
 .hero-line{overflow:hidden;display:block}
 .hero-word{display:block;transform:translateY(110%)}
 .hero-word.it{font-style:italic;color:rgba(220,210,190,.65)}
@@ -93,7 +93,7 @@ img,video{display:block;width:100%;height:100%;object-fit:cover}
 .gallery-track{display:flex;gap:2rem;padding:2rem 3rem;width:max-content;will-change:transform}
 
 /* GALLERY ITEM */
-.gitem{flex:none;width:clamp(220px,26vw,360px);cursor:none;transition:opacity .5s,filter .5s;opacity:1}
+.gitem{flex:none;width:clamp(220px,26vw,360px);cursor:none;transition:opacity .5s,filter .5s;opacity:1;position:relative}
 .gitem.dimmed{opacity:.05;filter:grayscale(1)}
 .gitem-img{width:100%;aspect-ratio:2/3;overflow:hidden;position:relative;background:var(--bg2)}
 .gitem-img img{position:absolute;inset:0;transition:transform .9s cubic-bezier(.25,.46,.45,.94)}
@@ -152,7 +152,7 @@ img,video{display:block;width:100%;height:100%;object-fit:cover}
 
 /* ABOUT */
 #about{padding:8rem 3rem;background:var(--bg);display:grid;grid-template-columns:5fr 4fr;gap:6rem;align-items:center;border-top:1px solid rgba(255,255,255,.04)}
-.about-name{font-family:var(--serif);font-weight:200;font-size:clamp(3rem,9vw,8.5rem);line-height:.85;letter-spacing:-.03em;color:var(--text);overflow:hidden}
+.about-name{font-family:var(--display);font-weight:200;font-size:clamp(3rem,9vw,8.5rem);line-height:.85;letter-spacing:.04em;color:var(--text);overflow:hidden;text-transform:uppercase}
 .about-name .ln{display:block;overflow:hidden}
 .about-name .lni{display:block;transform:translateY(110%)}
 .about-name em{font-style:italic;color:rgba(200,190,170,.5)}
@@ -192,6 +192,41 @@ footer span{font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;color:
   #about{grid-template-columns:1fr;padding:5rem 1.5rem;gap:3rem}
   footer{padding:1.5rem;flex-direction:column;gap:.5rem}
 }
+
+/* ─── WORK DETAIL MODAL ─── */
+#work-modal{position:fixed;inset:0;background:var(--bg);z-index:500;display:none;overflow-y:auto;
+  clip-path:inset(0 0 100% 0);transition:none}
+#work-modal.open{display:block}
+.wm-inner{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:start;padding:5rem 3rem;gap:4rem}
+.wm-left{position:sticky;top:5rem}
+.wm-close{position:fixed;top:2rem;right:2.5rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.25em;
+  color:var(--dim);background:none;border:none;cursor:none;z-index:10;transition:color .3s;padding:.5rem}
+.wm-close:hover{color:var(--text)}
+.wm-num{font-family:var(--mono);font-size:.55rem;letter-spacing:.35em;color:var(--amber);margin-bottom:1.5rem}
+.wm-title{font-family:var(--display);font-weight:200;font-size:clamp(2.5rem,6vw,5.5rem);
+  letter-spacing:.05em;text-transform:uppercase;color:var(--text);line-height:.9;margin-bottom:.8rem}
+.wm-title-jp{font-family:var(--jp);font-size:.75rem;font-weight:200;letter-spacing:.3em;
+  color:var(--amber);margin-bottom:2.5rem}
+.wm-meta{display:flex;gap:2rem;margin-bottom:2rem;border-top:1px solid rgba(255,255,255,.06);
+  padding-top:1.5rem}
+.wm-meta-item{}
+.wm-meta-label{font-family:var(--mono);font-size:.48rem;letter-spacing:.25em;color:var(--dim);margin-bottom:.4rem}
+.wm-meta-val{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;color:var(--text)}
+.wm-desc{font-family:var(--jp);font-size:.82rem;font-weight:200;line-height:2.6;
+  color:rgba(200,195,185,.6);letter-spacing:.04em;white-space:pre-line}
+.wm-right{}
+.wm-img{width:100%;aspect-ratio:1/1;overflow:hidden;background:var(--bg2);margin-bottom:1.5rem}
+.wm-img img{width:100%;height:100%;object-fit:cover}
+.wm-video{width:100%;aspect-ratio:16/9;background:#000;margin-bottom:1.5rem}
+.wm-video iframe{width:100%;height:100%;border:none}
+.wm-nav{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.06);padding-top:1.5rem;margin-top:1rem}
+.wm-nav-btn{font-family:var(--mono);font-size:.55rem;letter-spacing:.2em;color:var(--dim);
+  background:none;border:none;cursor:none;transition:color .3s;padding:.3rem 0}
+.wm-nav-btn:hover{color:var(--text)}
+@media(max-width:900px){
+  .wm-inner{grid-template-columns:1fr;padding:4rem 1.5rem}
+  .wm-left{position:static}
+}
 </style>
 </head>
 <body>
@@ -199,6 +234,42 @@ footer span{font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;color:
 <canvas id="grain"></canvas>
 <div id="cur"></div>
 <div id="cur-ring"></div>
+
+
+<!-- WORK DETAIL MODAL -->
+<div id="work-modal">
+  <button class="wm-close" id="wm-close-btn">CLOSE ×</button>
+  <div class="wm-inner">
+    <div class="wm-left">
+      <p class="wm-num" id="wm-num"></p>
+      <h2 class="wm-title" id="wm-title"></h2>
+      <p class="wm-title-jp" id="wm-title-jp"></p>
+      <div class="wm-meta">
+        <div class="wm-meta-item">
+          <p class="wm-meta-label">CATEGORY</p>
+          <p class="wm-meta-val" id="wm-cat"></p>
+        </div>
+        <div class="wm-meta-item">
+          <p class="wm-meta-label">YEAR</p>
+          <p class="wm-meta-val" id="wm-year"></p>
+        </div>
+        <div class="wm-meta-item">
+          <p class="wm-meta-label">TOOLS</p>
+          <p class="wm-meta-val" id="wm-tools"></p>
+        </div>
+      </div>
+      <p class="wm-desc" id="wm-desc"></p>
+    </div>
+    <div class="wm-right">
+      <div class="wm-img" id="wm-img"><img id="wm-img-el" src="" alt=""></div>
+      <div class="wm-video" id="wm-video"><iframe id="wm-iframe" src="" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
+      <div class="wm-nav">
+        <button class="wm-nav-btn" id="wm-prev"></button>
+        <button class="wm-nav-btn" id="wm-next"></button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- VIDEO OVERLAY -->
 <div id="voverlay">
@@ -227,7 +298,7 @@ footer span{font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;color:
   <div class="hero-vbg">
     <div class="yt-bg-wrap">
       <iframe
-        src="https://www.youtube-nocookie.com/embed/bZ5nOl48_Zo?autoplay=1&mute=1&loop=1&playlist=bZ5nOl48_Zo&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
+        src="https://www.youtube-nocookie.com/embed/bZ5nOl48_Zo?autoplay=1&mute=1&loop=1&playlist=bZ5nOl48_Zo&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&start=18"
         allow="autoplay; encrypted-media; gyroscope"
         allowfullscreen>
       </iframe>
@@ -237,7 +308,7 @@ footer span{font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;color:
     <div class="hero-tag"><span>3DCG ARTIST — CINEMATIC PORTRAITS — VISUAL FILMS</span></div>
     <h1 class="hero-h1">
       <span class="hero-line"><span class="hero-word">SUZUKI</span></span>
-      <span class="hero-line"><span class="hero-word it">Hikaru</span></span>
+      <span class="hero-line"><span class="hero-word">Hikaru</span></span>
     </h1>
     <div class="hero-foot">
       <div class="hero-sub">3DCG Artist / Blender Creator<br>Cinematic Portraits &amp; Visual Films</div>
@@ -560,8 +631,8 @@ footer span{font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;color:
 <!-- ── CONTACT ── -->
 <section id="contact">
   <p class="contact-pre">GET IN TOUCH</p>
-  <h2 class="contact-title"><span class="contact-title-inner">Let's<em> talk.</em></span></h2>
-  <p class="contact-sub">新しいプロジェクト・コラボレーションのご依頼</p>
+  <h2 class="contact-title"><span class="contact-title-inner">次の作品を、<em>一緒に。</em></span></h2>
+  <p class="contact-sub">依頼 · 相談 · コラボレーション</p>
   <div class="contact-links">
     <a href="https://www.instagram.com/suzuki_hikaru4/" target="_blank" rel="noopener" class="contact-link">INSTAGRAM</a>
     <a href="#" class="contact-link">X / TWITTER</a>
@@ -741,5 +812,152 @@ function startAll(){
     onUpdate:self=>{gsap.to('#nav',{y:self.direction===1&&self.progress>.02?-80:0,duration:.5,ease:'power2.out'})}});
 }
 </script>
+
+<script>
+const WORKS_DATA = [
+  {id:'001',title:'The Last Return',jp:'最後の帰還',cat:'FILM',year:'2025',tools:'Blender · DaVinci Resolve · After Effects',img:'./images/the-last-return.jpg',video:null,
+   desc:'地球が変わってしまった。それでも、世界に灯りは残っていた。\n\n孤独な人物が、廃墟と化した世界に佇む。たった一つの光が降り注ぐ中、それでも人間の存在を感じさせる一枚。\n未来への希望と、喪失の静寂が共存する映像作品のためのポスタービジュアル。'},
+  {id:'002',title:'The Obscura',jp:null,cat:'FILM',year:'2025',tools:'Blender · After Effects',img:'./images/the-obscura.jpg',video:null,
+   desc:'恐怖は私たちの中に歩いている。\n\nフードをかぶった人物が、雑踏の中に溶け込む。見えない恐怖、日常に潜む闇。\nスリラー映画のコンセプトポスターとして制作。光と影のコントラストで不安感を演出した。'},
+  {id:'003',title:'歩くことも、止まることも',jp:null,cat:'FILM',year:'2025',tools:'Blender · DaVinci Resolve · After Effects',img:'./images/aruku.jpg',video:null,
+   desc:'夜がほどけ、陽が心へ差し込む。\n\n雨に濡れた夜の街。バスが走り、人が歩く。止まることも、歩くことも、同じ時間の中にある。\n日常の美しさを映画的な視点で切り取ったシネマティックビジュアル。'},
+  {id:'004',title:'美の晩餐',jp:null,cat:'FILM',year:'2025',tools:'Blender · DaVinci Resolve',img:null,video:'c6krApaw5zU',
+   desc:'美しさとは何か。その問いを、映像と光で表現した作品。\n\n食卓、光、人物。日常の断片が、映画のワンシーンのように積み重なっていく。\nシネマティックな質感と、静かな詩情を込めた映像作品。'},
+  {id:'005',title:'good drive',jp:null,cat:'FILM',year:'2025',tools:'Blender · DaVinci Resolve',img:null,video:'-nlp9X2ELW8',
+   desc:'走ることの自由、風景の流れ、音楽と速度。\n\n移動という行為に宿る、ある種の解放感を映像で表現。\n光と影のグラデーション、窓から見える景色が、ドライブの詩的な側面を浮かび上がらせる。'},
+  {id:'006',title:'Floating City',jp:'浮遊都市',cat:'WORLD',year:'2024',tools:'Blender · Cycles',img:'./images/floating-city.jpg',video:null,
+   desc:'海の上に浮かぶ、無数の建物と構造物からなる巨大都市。\n\n廃墟のような美しさと、未来的なスケール感。夕焼けの光の中で、孤独な人物がその光景を見つめる。\nワールドビルディングの作品として、一枚の絵に物語を凝縮させた。'},
+  {id:'007',title:'LOST',jp:null,cat:'WORLD',year:'2024',tools:'Blender · After Effects',img:'./images/lost.png',video:'mm_DRgtgnm0',
+   desc:'霧のかかった近未来都市。巨大なホログラムが空を支配し、一人の人物がその前に立ち尽くす。\n\n「Hello, Lost」「Change before」—看板が語りかける言葉が、迷子になった現代人の内面を照らし出す。\nディストピアと詩情が交差する映像作品。'},
+  {id:'008',title:'UTOPIA',jp:null,cat:'WORLD',year:'2024',tools:'Blender · After Effects · Photoshop',img:'./images/utopia-color.jpg',video:null,
+   desc:'I believe it will be there.\n\n花畑、宇宙服の人物、衛星、破れた紙。現実と非現実が混ざり合ったコラージュ的なビジュアル。\n人類がいつか辿り着くであろうユートピアへの、静かな信仰を表現した作品。'},
+  {id:'009',title:'ROOM',jp:null,cat:'WORLD',year:'2024',tools:'Blender · DaVinci Resolve',img:null,video:'0qlhQLnca4Q',
+   desc:'一つの部屋が持つ、記憶と時間の重さ。\n\n何気ない空間に宿る、人間の痕跡と気配。光が窓から差し込み、埃が舞い、時間が止まったように感じられる瞬間を映像で切り取った。'},
+  {id:'010',title:'UFO',jp:null,cat:'WORLD',year:'2024',tools:'Blender · After Effects',img:null,video:'QGBiILPIbtA',
+   desc:'空に浮かぶ未知の物体。その存在は何を意味するのか。\n\nSFとリアリズムの境界線上に立つ映像作品。静かな驚きと、未知への畏怖を一枚の映像に込めた。'},
+  {id:'011',title:'Mysterious',jp:null,cat:'EXPERIMENTAL',year:'2023',tools:'Blender · ZBrush · DaVinci Resolve',img:'./images/mysterious.png',video:'UrLqo9bUrwo',
+   desc:'人間であって、人間でないもの。\n\n赤く燃えるような質感の体表、無表情な顔。存在することへの問いを、彫刻的なアプローチで表現した実験的なキャラクタービジュアル。\n美しさと不気味さの狭間に立つ、境界の生命体。'},
+  {id:'012',title:'Mysterious — Model',jp:'モデリングプロセス',cat:'EXPERIMENTAL',year:'2023',tools:'Blender · ZBrush',img:'./images/mysterious-wire.png',video:'jPwECQAR8kE',
+   desc:'Mysteriousのモデリング過程を記録した映像。\n\nワイヤーフレームから始まり、スカルプト、テクスチャリングへと変化していく制作プロセス。\n最終的な作品の背後にある、膨大な試行錯誤の記録。'},
+  {id:'013',title:'creature',jp:null,cat:'EXPERIMENTAL',year:'2023',tools:'Blender · DaVinci Resolve',img:null,video:'bZ5nOl48_Zo',
+   desc:'生命体、あるいは概念の形。\n\n生物的な質感と、無機質な空間の対比。何かが生まれようとしている、あるいは消えていこうとしている、その瞬間を映像で捉えた実験的な作品。'},
+  {id:'014',title:'statue',jp:'神像',cat:'EXPERIMENTAL',year:'2023',tools:'Blender · DaVinci Resolve',img:null,video:'sWAP-lQBU4E',
+   desc:'像は何を見つめているのか。\n\n神話的なモチーフを現代的な3DCGで再解釈。時間と信仰、人間が作り出した偶像への問いを、映像と光で表現した作品。'},
+  {id:'015',title:'Heliopolis',jp:null,cat:'PRODUCT',year:'2024',tools:'Blender · Cycles · Substance Painter',img:'./images/heliopolis-full.jpg',video:null,
+   desc:'ピラミッドと太陽神にインスパイアされたウイスキーブランドのラベルデザインとプロダクトビジュアライゼーション。\n\nゴールドとネイビーの組み合わせ、金箔の質感、ボトルのガラスの透明感。\n架空のシングルモルトスコッチウイスキー「Heliopolis 12年」のフォトリアルなCGビジュアル。'},
+  {id:'016',title:'Heliopolis — Pour',jp:null,cat:'PRODUCT',year:'2024',tools:'Blender · Mantaflow · Cycles',img:'./images/heliopolis-splash.jpg',video:null,
+   desc:'ウイスキーが注がれる瞬間の、動的なビジュアル。\n\nBlenderのMantaflow流体シミュレーションを使用し、グラスから溢れる液体とボトルの飛翔感を表現。\nプロダクトCGとダイナミクスシミュレーションを組み合わせた作品。'},
+  {id:'017',title:'The Maw Stout',jp:null,cat:'PRODUCT',year:'2024',tools:'Blender · Cycles · Substance Painter',img:'./images/maw-stout.jpg',video:null,
+   desc:'缶のラベルに、赤く錆びたような質感の人体彫刻を配置したクラフトビールのパッケージデザイン。\n\nダークで芸術的なビジュアルが、スタウトビールの重厚な味わいを想起させる。\n架空のブルワリー「Grim Hollow Brewery」のためのプロダクトビジュアル。'},
+  {id:'018',title:'The Maw Stout — Float',jp:null,cat:'PRODUCT',year:'2024',tools:'Blender · Mantaflow · Cycles',img:'./images/maw-stout-two.jpg',video:null,
+   desc:'2本の缶が宙に浮き、黒い液体が飛び散る。\n\nダイナミクスシミュレーションと商品ビジュアライゼーションを組み合わせたプロダクトCG。\n暗く美しいビジュアルが、製品の個性を際立たせる。'},
+  {id:'019',title:'Verdant Pine',jp:null,cat:'PRODUCT',year:'2024',tools:'Blender · Cycles · Photoshop',img:'./images/verdant-pine.jpg',video:null,
+   desc:'松の木とグラフィカルなラベルデザインが特徴的なクラフトビールのパッケージビジュアル。\n\nナチュラルな背景に立つ松の木と、モダンなグラフィックの組み合わせ。\n架空のIPA「Verdant Pine / Resin Trail」のフォトリアルなプロダクトCG。'},
+  {id:'020',title:'Verdant Pine — Splash',jp:null,cat:'PRODUCT',year:'2024',tools:'Blender · Mantaflow · Cycles',img:'./images/verdant-pine-splash.jpg',video:null,
+   desc:'緑色の液体が飛び散る中、2本の缶が宙に浮かぶ。\n\nフレッシュなホップの香りを連想させるグリーンの液体と、清潔感のある缶デザインの組み合わせ。\n流体シミュレーションを使った躍動感あるプロダクトビジュアル。'},
+  {id:'021',title:'Timberline Brewing',jp:null,cat:'PRODUCT',year:'2024',tools:'Blender · Cycles · Substance Painter',img:'./images/timberline.jpg',video:null,
+   desc:'砕けた石像から草花が芽吹くラベルデザインが印象的なクラフトビールのビジュアル。\n\n廃墟と自然の共存、時間の流れを表現したコンセプチュアルなパッケージデザイン。\n架空のブルワリー「Timberline Brewing」のAlpine Amber缶のフォトリアルCG。'},
+  {id:'022',title:'Timberline — Splash',jp:null,cat:'PRODUCT',year:'2024',tools:'Blender · Mantaflow · Cycles',img:'./images/timberline-splash.jpg',video:null,
+   desc:'黄緑色の液体が飛び散る中、2本のTimberline缶が浮かび上がる。\n\nAlpine Amberの爽やかな特性を視覚化したダイナミクスシミュレーション。\nプロダクトCGと流体表現を組み合わせた商品ビジュアライゼーション。'},
+];
+
+// Work Modal
+(()=>{
+  const modal = document.getElementById('work-modal');
+  const overlay = document.getElementById('voverlay');
+  const closeBtn = document.getElementById('wm-close-btn');
+  let currentIdx = 0;
+  let modalOrigin = {x: window.innerWidth/2, y: window.innerHeight/2};
+
+  function openWork(id, originEl) {
+    const w = WORKS_DATA.find(x => x.id === id);
+    if (!w) return;
+    currentIdx = WORKS_DATA.findIndex(x => x.id === id);
+
+    // Set content
+    document.getElementById('wm-num').textContent = w.id + ' / ' + w.cat;
+    document.getElementById('wm-title').textContent = w.title;
+    const jpEl = document.getElementById('wm-title-jp');
+    jpEl.textContent = w.jp || '';
+    jpEl.style.display = w.jp ? 'block' : 'none';
+    document.getElementById('wm-cat').textContent = w.cat;
+    document.getElementById('wm-year').textContent = w.year;
+    document.getElementById('wm-tools').textContent = w.tools;
+    document.getElementById('wm-desc').textContent = w.desc;
+
+    const imgWrap = document.getElementById('wm-img');
+    const imgEl = document.getElementById('wm-img-el');
+    const videoWrap = document.getElementById('wm-video');
+    const iframeEl = document.getElementById('wm-iframe');
+
+    if (w.video) {
+      imgWrap.style.display = 'none';
+      videoWrap.style.display = 'block';
+      iframeEl.src = `https://www.youtube.com/embed/${w.video}?rel=0&color=white`;
+    } else {
+      videoWrap.style.display = 'none';
+      imgWrap.style.display = 'block';
+      imgEl.src = w.img;
+      imgEl.alt = w.title;
+    }
+
+    // Update nav
+    const prev = WORKS_DATA[currentIdx - 1];
+    const next = WORKS_DATA[currentIdx + 1];
+    document.getElementById('wm-prev').textContent = prev ? '← ' + prev.title : '';
+    document.getElementById('wm-prev').style.visibility = prev ? 'visible' : 'hidden';
+    document.getElementById('wm-next').textContent = next ? next.title + ' →' : '';
+    document.getElementById('wm-next').style.visibility = next ? 'visible' : 'hidden';
+
+    // Animate open
+    if (originEl) {
+      const r = originEl.getBoundingClientRect();
+      modalOrigin = {x: r.left + r.width/2, y: r.top + r.height/2};
+    }
+
+    modal.classList.add('open');
+    modal.scrollTop = 0;
+    gsap.fromTo(modal,
+      {clipPath: `circle(0% at ${modalOrigin.x}px ${modalOrigin.y}px)`},
+      {clipPath: `circle(150% at ${modalOrigin.x}px ${modalOrigin.y}px)`, duration: .85, ease: 'power4.inOut'}
+    );
+  }
+
+  function closeWork() {
+    const iframeEl = document.getElementById('wm-iframe');
+    iframeEl.src = '';
+    gsap.to(modal, {
+      clipPath: `circle(0% at ${modalOrigin.x}px ${modalOrigin.y}px)`,
+      duration: .65, ease: 'power4.inOut',
+      onComplete: () => { modal.classList.remove('open'); }
+    });
+  }
+
+  // Attach click to gallery items
+  document.querySelectorAll('.gitem').forEach(item => {
+    item.addEventListener('click', (e) => {
+      // Don't open modal if play button was clicked
+      if (e.target.closest('.play-btn')) return;
+      const n = item.querySelector('.gitem-n');
+      if (!n) return;
+      const num = n.textContent.trim().padStart(3,'0');
+      openWork(num, item);
+    });
+  });
+
+  closeBtn.addEventListener('click', closeWork);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeWork(); });
+
+  document.getElementById('wm-prev').addEventListener('click', () => {
+    const prev = WORKS_DATA[currentIdx - 1];
+    if (prev) openWork(prev.id, null);
+  });
+  document.getElementById('wm-next').addEventListener('click', () => {
+    const next = WORKS_DATA[currentIdx + 1];
+    if (next) openWork(next.id, null);
+  });
+})();
+</script>
+
 </body>
 </html>
